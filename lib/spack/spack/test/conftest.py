@@ -462,6 +462,14 @@ def configuration_dir(tmpdir_factory, linux_os):
     # Create temporary 'defaults', 'site' and 'user' folders
     tmpdir.ensure('user', dir=True)
 
+    # Test the new or the original concretizer based on
+    # an environment variable
+    solver = os.environ.get('SPACK_TEST_SOLVER', 'clingo')
+    config_yaml = test_config.join('config.yaml')
+    content = ''.join(config_yaml.read()).format(solver)
+    t = tmpdir.join('site', 'config.yaml')
+    t.write(content)
+
     # Slightly modify compilers.yaml to look like Linux
     compilers_yaml = test_config.join('compilers.yaml')
     content = ''.join(compilers_yaml.read()).format(linux_os)
